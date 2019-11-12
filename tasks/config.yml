@@ -1,6 +1,18 @@
 ---
 # File: config.yml - Consul configuration tasks
 
+- set_fact:
+    consul_join: >-
+      [{% for server in _consul_lan_servers -%}
+        "{{ hostvars[server]['consul_advertise_address'] | default(hostvars[server]['consul_bind_address']) }}"
+        {{ '' if loop.last else ',' }}
+      {%- endfor %}]
+    consul_join_wan: >-
+      [{% for server in _consul_wan_servers -%}
+        "{{ hostvars[server]['consul_advertise_address_wan'] | default(hostvars[server]['consul_bind_address']) }}"
+        {{ '' if loop.last else ',' }}
+      {%- endfor %}]
+
 - name: Create configuration
   copy:
     dest: "{{ item.dest }}"

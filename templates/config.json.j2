@@ -83,13 +83,7 @@
     "retry_interval": "{{ consul_retry_interval }}",
     "retry_max": {{ consul_retry_max | int }},
 
-    "retry_join":
-    {% if not consul_retry_join_skip_hosts %}
-      {% for server in _consul_lan_servers %}
-      {%   set _ = consul_join.append(hostvars[server]['consul_advertise_address'] | default(hostvars[server]['consul_bind_address'])) %}
-      {% endfor %}
-    {% endif %}
-    {{ consul_join | map('ipwrap') | list | to_json }},
+    "retry_join": {{ consul_join | map('ipwrap') | list | to_json }},
 
     {## Server/Client ##}
     "server": {{ (item.config_version != 'client') | bool | to_json }},
@@ -164,11 +158,7 @@
     "retry_max_wan": {{ consul_retry_max_wan | int }},
 
     {% if _consul_wan_servercount | int > 0 %}
-    "retry_join_wan":
-    {% for server in _consul_wan_servers %}
-    {%   set _ = consul_join_wan.append(hostvars[server]['consul_advertise_address_wan'] | default(hostvars[server]['consul_bind_address'])) %}
-    {% endfor %}
-    {{ consul_join_wan | map('ipwrap') | list | to_json }},
+    "retry_join_wan": {{ consul_join_wan | map('ipwrap') | list | to_json }},
     {% endif %}
 
     {## ACLs ##}
