@@ -52,3 +52,22 @@
   when: consul_services is defined and consul_services|length>0
   tags:
     - consul_services
+
+- name: Flush handlers
+  meta: flush_handlers
+
+- name: Rolling restart the cluster
+  block:
+    - name: rolling restart consul on Linux
+      service:
+        name: consul
+        state: restarted
+      when: ansible_os_family != "Windows"
+
+    - name: rolling restart consul on windows
+      win_service:
+        name: consul
+        state: restarted
+      when: ansible_os_family == "Windows"
+  throttle: 1
+  when: consul_install_rolling_restart | bool and rolling_restart_needed | default(false) | bool

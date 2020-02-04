@@ -3,12 +3,18 @@
   service:
     name: consul
     state: restarted
-  when: ansible_os_family != "Windows"
+  when: ansible_os_family != "Windows" and not consul_install_rolling_restart | bool
   listen: 'restart consul'
 
 - name: restart consul on windows
   win_service:
     name: consul
     state: restarted
-  when: ansible_os_family == "Windows"
+  when: ansible_os_family == "Windows" and not consul_install_rolling_restart | bool
   listen: 'restart consul'
+
+- name: set rolling_restart_needed
+  set_fact:
+    rolling_restart_needed: true
+  listen: 'restart consul'
+  when: consul_install_rolling_restart | bool

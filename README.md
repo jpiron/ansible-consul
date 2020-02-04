@@ -27,7 +27,7 @@ This role requires a FreeBSD, Debian, or Red Hat Enterprise Linux distribution o
 The role might work with other OS distributions and versions, but is known to function well with the following software versions:
 
 * Consul: 1.5.2
-* Ansible: 2.7.2
+* Ansible: 2.9.0
 * Alpine Linux: 3.8
 * CentOS: 7
 * Debian: 9
@@ -553,6 +553,12 @@ Notice that the dict object has to use precisely the names stated in the documen
 - Whether to [upgrade consul](https://www.consul.io/docs/upgrading.html) when a new version is specified
 - The role does not handle the orchestration of a rolling update of servers followed by client nodes
 - This option is not available for Windows, yet. (PR welcome)
+- Default value: false
+
+### `consul_install_rolling_restart`
+
+- Whether to perform a rolling restart of the cluster or not
+- If not, if a restart is required, Consul is restarted on all the play hosts at the same time
 - Default value: false
 
 ### `consul_ui`

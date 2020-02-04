@@ -27,6 +27,9 @@ ExecStart={{ consul_bin_path }}/consul agent \
     -config-file={{ consul_config_path }}/config.json \
     -config-dir={{ consul_configd_path}} \
     -pid-file={{ consul_run_path }}/consul.pid
+{% if consul_install_rolling_restart %}
+ExecStartPost=/bin/sleep 5
+{% endif %}
 ExecReload=/bin/kill -HUP $MAINPID
 KillMode=process
 KillSignal=SIGTERM
